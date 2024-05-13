@@ -134,20 +134,31 @@ def merge(
 
 
     ## Search index
-    D, I = index.search(embeddings1, 1)
+    D, I = index.search(embeddings1, 3)
+    matched_indices = I.flatten()
+    scores = D.flatten()
+    repeat_count = len(df1) * 3
+    
+    df1_expanded = pd.DataFrame(np.repeat(df1.values, 3, axis=0), columns=df1.columns)
+    df2_matched = df2.iloc[matched_indices].reset_index(drop=True)
+    df2_matched['score'] = scores
+
+    df_lm_matched = df1_expanded.merge(df2_matched, left_index=True, right_index=True, how="inner", suffixes=suffixes)
+    
+    return df_lm_matched
   
 
-    ## Check nearest neighbor of the first text in df1 as a test
-    df1 = df1.reset_index(drop=True)
-    df2 = df2.reset_index(drop=True)
+    # ## Check nearest neighbor of the first text in df1 as a test
+    # df1 = df1.reset_index(drop=True)
+    # df2 = df2.reset_index(drop=True)
 
-    ## Fuzzily merge the dfs based on the faiss index queries
-    df_lm_matched = df1.merge(df2.iloc[I.flatten()].reset_index(drop=True), left_index=True, right_index=True, how="inner",suffixes=suffixes)
-    ### Add score column
-    df_lm_matched["score"] = D.flatten()
+    # ## Fuzzily merge the dfs based on the faiss index queries
+    # df_lm_matched = df1.merge(df2.iloc[I.flatten()].reset_index(drop=True), left_index=True, right_index=True, how="inner",suffixes=suffixes)
+    # ### Add score column
+    # df_lm_matched["score"] = D.flatten()
 
         
-    return df_lm_matched
+    # return df_lm_matched
 
     
 
