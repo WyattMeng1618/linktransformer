@@ -134,12 +134,12 @@ def merge(
 
 
     ## Search index
-    D, I = index.search(embeddings1, 3)
+    D, I = index.search(embeddings1, 5)
     matched_indices = I.flatten()
     scores = D.flatten()
-    repeat_count = len(df1) * 3
+    repeat_count = len(df1) * 5
     
-    df1_expanded = pd.DataFrame(np.repeat(df1.values, 3, axis=0), columns=df1.columns)
+    df1_expanded = pd.DataFrame(np.repeat(df1.values, 5, axis=0), columns=df1.columns)
     df2_matched = df2.iloc[matched_indices].reset_index(drop=True)
     df2_matched['score'] = scores
 
